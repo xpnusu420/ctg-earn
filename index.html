@@ -1,0 +1,1968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<title>EarnKoro - Earn Money</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  :root {
+    --bg: #0B0F1A;
+    --card: #121A2A;
+    --card2: #1A2238;
+    --primary: #6C5CE7;
+    --secondary: #00D2FF;
+    --gold: #F5C542;
+    --success: #00FF9D;
+    --danger: #FF4D4D;
+    --text: #fff;
+    --muted: #8A93A6;
+    --border: rgba(255,255,255,.08);
+  }
+  
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+  }
+  
+  body {
+    background: radial-gradient(800px 400px at 20% -10%, rgba(108,92,231,.25), transparent 60%),
+                radial-gradient(600px 500px at 100% 10%, rgba(0,210,255,.18), transparent 60%),
+                var(--bg);
+    display: flex;
+    justify-content: center;
+  }
+  
+  #app {
+    width: 100%;
+    max-width: 440px;
+    height: 100dvh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  /* Main App Styles */
+  .topbar {
+    padding: 18px 18px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(14px);
+    background: linear-gradient(180deg, rgba(11,15,26,.85), rgba(11,15,26,.4));
+  }
+  
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+  }
+  
+  .brand-logo {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    font-size: 18px;
+  }
+  
+  .brand-name {
+    font-size: 17px;
+  }
+  
+  .brand-name span {
+    background: linear-gradient(90deg, var(--gold), #fff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  
+  .icon-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: var(--card);
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .icon-btn:active {
+    transform: scale(0.95);
+  }
+  
+  .pages {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 90px;
+  }
+  
+  .pages::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .page {
+    display: none;
+    padding: 6px 16px 20px;
+    animation: fadeUp 0.4s ease both;
+  }
+  
+  .page.active {
+    display: block;
+  }
+  
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  
+  /* Balance Card */
+  .balance-card {
+    position: relative;
+    border-radius: 22px;
+    padding: 22px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1B1F45, #0E1A2E);
+    border: 1px solid rgba(108,92,231,.35);
+    box-shadow: 0 20px 50px -20px rgba(108,92,231,.6);
+  }
+  
+  .balance-card::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    background: conic-gradient(from 0deg, var(--primary), var(--secondary), var(--gold), var(--primary));
+    filter: blur(28px);
+    opacity: .35;
+    animation: rotate 10s linear infinite;
+  }
+  
+  @keyframes rotate {
+    to { transform: rotate(360deg); }
+  }
+  
+  .bc-inner {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .bc-label {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.6px;
+  }
+  
+  .bc-amount {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  
+  .bc-amount .num {
+    font-size: 38px;
+    font-weight: 800;
+    background: linear-gradient(90deg, #fff, var(--gold));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  
+  .bc-amount .unit {
+    font-size: 13px;
+    color: var(--gold);
+  }
+  
+  .bc-eq {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  
+  .bc-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+  }
+  
+  .bc-row .pill {
+    flex: 1;
+    padding: 11px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 13px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .bc-row .pill:active {
+    transform: scale(0.96);
+  }
+  
+  .bc-row .pill.gold {
+    background: linear-gradient(135deg, var(--gold), #ffb830);
+    color: #1a1300;
+  }
+  
+  /* Streak */
+  .streak {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    border-radius: 18px;
+    background: var(--card);
+    border: 1px solid var(--border);
+  }
+  
+  .flame {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    background: linear-gradient(135deg, #FF7A00, #FFD43B);
+  }
+  
+  /* Grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  
+  .qa {
+    padding: 14px 10px;
+    border-radius: 18px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .qa:active {
+    transform: scale(0.95);
+  }
+  
+  .qa .ic {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 8px;
+    font-size: 22px;
+    background: linear-gradient(135deg, rgba(108,92,231,.25), rgba(0,210,255,.15));
+  }
+  
+  .qa .name {
+    font-size: 12px;
+    font-weight: 600;
+  }
+  
+  .qa .sub {
+    font-size: 10px;
+    color: var(--muted);
+  }
+  
+  .badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--success);
+    color: #002a17;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 3px 6px;
+    border-radius: 8px;
+  }
+  
+  /* Tasks */
+  .task {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    border-radius: 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    margin-bottom: 10px;
+  }
+  
+  .task .tic {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+  }
+  
+  .task .meta h5 {
+    font-size: 13px;
+  }
+  
+  .task .meta p {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  
+  .task .rew {
+    margin-left: auto;
+    text-align: right;
+  }
+  
+  .task .rew b {
+    color: var(--gold);
+    font-size: 13px;
+  }
+  
+  .task .rew button {
+    margin-top: 4px;
+    padding: 6px 10px;
+    border-radius: 10px;
+    border: none;
+    background: var(--primary);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  
+  /* Bottom Nav */
+  .nav {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
+    background: rgba(11,15,26,.95);
+    backdrop-filter: blur(18px);
+    border-top: 1px solid var(--border);
+    z-index: 20;
+  }
+  
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 4px;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 600;
+    transition: color 0.25s;
+    position: relative;
+  }
+  
+  .nav-item svg {
+    width: 22px;
+    height: 22px;
+    stroke-width: 2;
+  }
+  
+  .nav-item.active {
+    color: var(--secondary);
+  }
+  
+  .nav-item.active::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 30px;
+    height: 3px;
+    border-radius: 0 0 6px 6px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+  }
+  
+  .nav-item.center {
+    transform: translateY(-14px);
+  }
+  
+  .nav-item.center .fab {
+    width: 54px;
+    height: 54px;
+    border-radius: 18px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    box-shadow: 0 12px 28px rgba(108,92,231,.55);
+    font-size: 24px;
+    color: #fff;
+  }
+  
+  /* Page Headers */
+  .ph {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0 16px;
+  }
+  
+  .back {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+  }
+  
+  .ph h2 {
+    font-size: 18px;
+    font-weight: 700;
+  }
+  
+  .ph p {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  
+  /* Wheel */
+  .wheel-wrap {
+    position: relative;
+    margin: 20px auto;
+    width: 300px;
+    height: 300px;
+  }
+  
+  .wheel-pointer {
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-top: 22px solid var(--gold);
+    z-index: 3;
+  }
+  
+  .wheel-outer {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    padding: 6px;
+  }
+  
+  .wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    transition: transform 5s cubic-bezier(.18,.9,.2,1);
+    background: conic-gradient(
+      #6C5CE7 0 45deg, #00D2FF 45deg 90deg,
+      #F5C542 90deg 135deg, #FF6B6B 135deg 180deg,
+      #00FF9D 180deg 225deg, #6C5CE7 225deg 270deg,
+      #F5C542 270deg 315deg, #00D2FF 315deg 360deg
+    );
+  }
+  
+  .wheel-labels {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  
+  .wheel-labels span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 0;
+    color: #fff;
+    font-weight: 800;
+    font-size: 14px;
+  }
+  
+  .wheel-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 4px solid var(--gold);
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    color: var(--gold);
+    font-size: 14px;
+    z-index: 2;
+  }
+  
+  /* Scratch */
+  .scratch-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 10px;
+  }
+  
+  .scratch {
+    aspect-ratio: 1;
+    border-radius: 18px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+  
+  .scratch .reveal {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--gold);
+    font-weight: 800;
+    font-size: 22px;
+  }
+  
+  .scratch .cover {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(45deg, #2a3658 0 8px, #1c2542 8px 16px);
+    display: grid;
+    place-items: center;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+    transition: opacity 0.6s;
+  }
+  
+  .scratch.opened .cover {
+    opacity: 0;
+  }
+  
+  /* Referral */
+  .ref-card {
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(108,92,231,.25), rgba(0,210,255,.15));
+    border: 1px solid rgba(108,92,231,.4);
+  }
+  
+  .ref-card .big {
+    font-size: 42px;
+  }
+  
+  .ref-link {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--card);
+    padding: 8px 8px 8px 14px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+  }
+  
+  .ref-link span {
+    flex: 1;
+    font-size: 12px;
+    color: var(--secondary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .ref-link button {
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: none;
+    background: var(--primary);
+    color: #fff;
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  
+  .ref-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 14px;
+  }
+  
+  .ref-stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px;
+    text-align: center;
+  }
+  
+  .ref-stat b {
+    display: block;
+    font-size: 18px;
+    color: var(--gold);
+  }
+  
+  /* Withdraw */
+  .methods {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  
+  .method {
+    padding: 14px 8px;
+    border-radius: 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .method.active {
+    border-color: var(--secondary);
+  }
+  
+  .field {
+    margin-bottom: 12px;
+  }
+  
+  .field label {
+    font-size: 12px;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 6px;
+  }
+  
+  .field input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: #fff;
+    font-size: 15px;
+    outline: none;
+  }
+  
+  .field input:focus {
+    border-color: var(--primary);
+  }
+  
+  .chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  
+  .chip {
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    font-size: 12px;
+    cursor: pointer;
+  }
+  
+  .chip.active {
+    background: var(--primary);
+  }
+  
+  /* Buttons */
+  .btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 16px;
+    border: none;
+    color: #fff;
+    font-weight: 800;
+    font-size: 15px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  
+  .btn:active {
+    transform: scale(0.97);
+  }
+  
+  .btn.gold {
+    background: linear-gradient(135deg, var(--gold), #ff9f1a);
+    color: #1a1300;
+  }
+  
+  /* Modal */
+  .modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.85);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+  
+  .modal.show {
+    display: flex;
+  }
+  
+  .modal-card {
+    width: 100%;
+    max-width: 360px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 24px;
+    text-align: center;
+    position: relative;
+  }
+  
+  .modal-card .big-ic {
+    width: 70px;
+    height: 70px;
+    border-radius: 20px;
+    margin: 0 auto 14px;
+    display: grid;
+    place-items: center;
+    font-size: 32px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+  }
+  
+  .modal-card h3 {
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+  
+  .modal-card p {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 18px;
+  }
+  
+  .close-x {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.08);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .modal-input {
+    width: 100%;
+    padding: 12px;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: #fff;
+    margin-bottom: 12px;
+    outline: none;
+  }
+  
+  .modal-input:focus {
+    border-color: var(--primary);
+  }
+  
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 110px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 12px 18px;
+    border-radius: 14px;
+    font-size: 13px;
+    font-weight: 600;
+    z-index: 300;
+    opacity: 0;
+    transition: 0.3s;
+  }
+  
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  
+  .toast.success {
+    border-color: var(--success);
+    color: var(--success);
+  }
+  
+  /* Confetti */
+  .confetti {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    z-index: 200;
+    overflow: hidden;
+    display: none;
+  }
+  
+  .confetti.show {
+    display: block;
+  }
+  
+  .confetti i {
+    position: absolute;
+    width: 8px;
+    height: 14px;
+    top: -20px;
+    animation: fall 2.5s linear forwards;
+  }
+  
+  @keyframes fall {
+    to {
+      transform: translateY(110vh) rotate(720deg);
+      opacity: 0;
+    }
+  }
+  
+  .sec-title a {
+    font-size: 12px;
+    color: var(--secondary);
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<div id="loading" style="position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:1000;">
+  <div style="width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+</div>
+
+<div id="app" style="display:none">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-logo">💰</div>
+      <div>
+        <div class="brand-name">Earn<span>Koro</span></div>
+        <div style="font-size:10px;color:var(--muted);">Earn • Spin • Win</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <div class="icon-btn" id="notificationBtn">🔔</div>
+      <div class="icon-btn" id="profileBtn">👤</div>
+    </div>
+  </div>
+
+  <div class="pages">
+
+    <!-- HOME PAGE -->
+    <div class="page active" id="page-home">
+      <div class="balance-card">
+        <div class="bc-inner">
+          <div class="bc-label">Total Balance</div>
+          <div class="bc-amount">
+            <div class="num" id="balance">0</div>
+            <div class="unit">COINS</div>
+          </div>
+          <div class="bc-eq">≈ ৳ <span id="balanceTk">0</span> BDT</div>
+          <div class="bc-row">
+            <div class="pill" id="withdrawBtn">↑ Withdraw</div>
+            <div class="pill gold" id="inviteBtn">+ Invite</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="streak">
+        <div class="flame">🔥</div>
+        <div>
+          <h4>Daily Streak!</h4>
+          <p>Come back tomorrow to keep it</p>
+        </div>
+        <div class="num" id="streakBonus">+0</div>
+      </div>
+
+      <div class="sec-title"><h3>Quick Actions</h3><a id="seeAllBtn">See all</a></div>
+      <div class="grid">
+        <div class="qa" id="watchAdBtn">
+          <div class="ic">📺</div>
+          <div class="name">Watch Ads</div>
+          <div class="sub" id="adRewardText">+0 coins</div>
+        </div>
+        <div class="qa gold" id="dailyBonusBtn">
+          <div class="ic">🎁</div>
+          <div class="name">Daily Bonus</div>
+          <div class="sub" id="dailyBonusText">Claim now</div>
+        </div>
+        <div class="qa" id="spinNavBtn">
+          <div class="ic">🎡</div>
+          <div class="name">Spin Wheel</div>
+          <div class="sub" id="spinCostText">Win big</div>
+        </div>
+        <div class="qa success" id="scratchNavBtn">
+          <div class="ic">🎫</div>
+          <div class="name">Scratch</div>
+          <div class="sub" id="scratchCardsText">0 cards left</div>
+        </div>
+        <div class="qa" id="luckyBoxBtn">
+          <div class="ic">📦</div>
+          <div class="name">Lucky Box</div>
+          <div class="sub">8 PM</div>
+        </div>
+        <div class="qa" id="tasksScrollBtn">
+          <div class="ic">✅</div>
+          <div class="name">Tasks</div>
+          <div class="sub" id="taskCount">0 active</div>
+        </div>
+      </div>
+
+      <div class="sec-title" id="tasks"><h3>Earning Tasks</h3><a id="viewAllTasksBtn">View all</a></div>
+      <div id="tasksList"></div>
+    </div>
+
+    <!-- SPIN PAGE -->
+    <div class="page" id="page-spin">
+      <div class="ph">
+        <div class="back" onclick="go('home')">‹</div>
+        <div><h2>Lucky Spin 🎡</h2><p id="spinFreeInfo">0 free spins available</p></div>
+      </div>
+      <div class="wheel-wrap">
+        <div class="wheel-pointer"></div>
+        <div class="wheel-outer">
+          <div class="wheel" id="wheel">
+            <div class="wheel-labels" id="wheelLabels"></div>
+          </div>
+        </div>
+        <div class="wheel-center">SPIN</div>
+      </div>
+      <button class="btn gold" id="spinNowBtn">🎯 SPIN NOW</button>
+      <div style="margin-top:14px;padding:14px;border-radius:14px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted);text-align:center">
+        💡 Watch an ad to get extra spins
+      </div>
+    </div>
+
+    <!-- SCRATCH PAGE -->
+    <div class="page" id="page-scratch">
+      <div class="ph">
+        <div class="back" onclick="go('home')">‹</div>
+        <div><h2>Scratch & Win 🎫</h2><p>Tap to reveal hidden coins</p></div>
+      </div>
+      <div class="scratch-wrap" id="scratchWrap"></div>
+      <button class="btn" id="resetScratchBtn">🔄 Get New Cards</button>
+    </div>
+
+    <!-- REFERRAL PAGE -->
+    <div class="page" id="page-referral">
+      <div class="ph">
+        <div class="back" onclick="go('home')">‹</div>
+        <div><h2>Invite & Earn 🚀</h2><p>Get coins per friend</p></div>
+      </div>
+      <div class="ref-card">
+        <div class="big">🎁</div>
+        <h3 id="referrerBonusText">Earn coins per friend</h3>
+        <p id="commissionText">Plus % of their lifetime earnings</p>
+        <div class="ref-link">
+          <span id="refLink">Loading...</span>
+          <button id="copyRefBtn">📋 Copy</button>
+        </div>
+      </div>
+      <div class="ref-stats">
+        <div class="ref-stat"><b id="invitedCount">0</b><span>Invited</span></div>
+        <div class="ref-stat"><b id="joinedCount">0</b><span>Joined</span></div>
+        <div class="ref-stat"><b id="referralEarned">0</b><span>Earned</span></div>
+      </div>
+      <div class="sec-title"><h3>Your Referrals</h3><a>All</a></div>
+      <div id="referralsList"></div>
+    </div>
+
+    <!-- WITHDRAW PAGE -->
+    <div class="page" id="page-withdraw">
+      <div class="ph">
+        <div class="back" onclick="go('home')">‹</div>
+        <div><h2>Withdraw 💸</h2><p id="minWithdrawText">Min ৳0</p></div>
+      </div>
+      <div class="balance-card" style="padding:16px">
+        <div class="bc-inner">
+          <div class="bc-label">Available</div>
+          <div class="bc-amount"><div class="num" style="font-size:28px" id="availableTk">৳ 0</div></div>
+        </div>
+      </div>
+      <div class="sec-title"><h3>Select Method</h3></div>
+      <div class="methods">
+        <div class="method" data-method="bKash"><div class="em">📱</div><div class="nm">bKash</div></div>
+        <div class="method" data-method="Nagad"><div class="em">💳</div><div class="nm">Nagad</div></div>
+        <div class="method" data-method="Rocket"><div class="em">🚀</div><div class="nm">Rocket</div></div>
+      </div>
+      <div class="field">
+        <label>Mobile Number</label>
+        <input type="tel" id="mobileNumber" placeholder="01XXXXXXXXX" />
+      </div>
+      <div class="field">
+        <label>Amount (BDT)</label>
+        <input type="number" id="wdAmount" placeholder="Enter amount" />
+        <div class="chips" id="amountChips"></div>
+      </div>
+      <button class="btn success" id="submitWdBtn">💸 REQUEST WITHDRAW</button>
+      <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:12px">Processed within 24 hours</p>
+    </div>
+
+    <!-- PROFILE PAGE -->
+    <div class="page" id="page-profile">
+      <div class="ph">
+        <div class="back" onclick="go('home')">‹</div>
+        <div><h2>My Profile</h2><p>Manage your account</p></div>
+      </div>
+      <div class="prof-head" style="text-align:center;padding:18px;border-radius:20px;background:var(--card);">
+        <div class="avatar" style="width:84px;height:84px;border-radius:50%;margin:0 auto;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),var(--gold));font-size:34px;" id="avatarLetter">?</div>
+        <h3 id="userName" style="margin-top:10px;">Guest User</h3>
+        <p id="userEmail" style="color:var(--muted);font-size:12px;">Not logged in</p>
+        <button class="btn" id="loginRegisterBtn" style="margin-top:16px;background:linear-gradient(135deg,var(--gold),#ff9f1a);color:#1a1300;">🔐 Login / Register</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="nav">
+    <div class="nav-item" data-page="home" onclick="go('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2h-4v-7H9v7H5a2 2 0 0 1-2-2V10z"/></svg>
+      <span>Home</span>
+    </div>
+    <div class="nav-item" data-page="spin" onclick="go('spin')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>
+      <span>Spin</span>
+    </div>
+    <div class="nav-item center" id="fabAdBtn">
+      <div class="fab">📺</div>
+    </div>
+    <div class="nav-item" data-page="referral" onclick="go('referral')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span>Invite</span>
+    </div>
+    <div class="nav-item" data-page="profile" onclick="go('profile')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+      <span>Me</span>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal" id="authModal">
+  <div class="modal-card">
+    <div class="close-x" onclick="closeAuthModal()">✕</div>
+    <div id="authModalBody"></div>
+  </div>
+</div>
+
+<div class="modal" id="generalModal">
+  <div class="modal-card">
+    <div class="close-x" onclick="closeGeneralModal()">✕</div>
+    <div id="generalModalBody"></div>
+  </div>
+</div>
+
+<div class="confetti" id="confetti"></div>
+<div class="toast" id="toast"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, addDoc, orderBy, onSnapshot, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDQeTuBhbYioL0Cbmt8fRnAJPJM180zSdc",
+    authDomain: "ctg-earn.firebaseapp.com",
+    projectId: "ctg-earn",
+    storageBucket: "ctg-earn.firebasestorage.app",
+    messagingSenderId: "980482378466",
+    appId: "1:980482378466:web:d16b83873e0c68a8692cbb",
+    measurementId: "G-SJZXW3J4NS"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // DOM Elements
+  const $ = id => document.getElementById(id);
+  
+  // State
+  let currentUser = null;
+  let userData = null;
+  let settings = null;
+  let tasks = [];
+  let wheelSegments = [];
+  let spinning = false;
+  let currentRot = 0;
+  
+  // Helper Functions
+  function hideLoading() {
+    const loading = document.getElementById('loading');
+    const appDiv = document.getElementById('app');
+    if (loading) loading.style.display = 'none';
+    if (appDiv) appDiv.style.display = 'flex';
+  }
+  
+  function toast(msg, type = '') {
+    const t = $('toast');
+    if (t) {
+      t.textContent = msg;
+      t.className = 'toast show ' + type;
+      setTimeout(() => t.classList.remove('show'), 2200);
+    }
+  }
+  
+  function confetti() {
+    const c = $('confetti');
+    if (!c) return;
+    c.innerHTML = '';
+    c.classList.add('show');
+    const colors = ['#6C5CE7', '#00D2FF', '#F5C542', '#00FF9D', '#FF6B6B'];
+    for (let i = 0; i < 60; i++) {
+      const p = document.createElement('i');
+      p.style.left = Math.random() * 100 + '%';
+      p.style.background = colors[i % colors.length];
+      p.style.animationDelay = (Math.random() * 0.5) + 's';
+      p.style.animationDuration = (2 + Math.random() * 1.5) + 's';
+      c.appendChild(p);
+    }
+    setTimeout(() => c.classList.remove('show'), 3500);
+  }
+  
+  function openAuthModal(html) {
+    const modal = $('authModal');
+    const body = $('authModalBody');
+    if (modal && body) {
+      body.innerHTML = html;
+      modal.classList.add('show');
+    }
+  }
+  
+  function closeAuthModal() {
+    const modal = $('authModal');
+    if (modal) modal.classList.remove('show');
+  }
+  
+  function openGeneralModal(html) {
+    const modal = $('generalModal');
+    const body = $('generalModalBody');
+    if (modal && body) {
+      body.innerHTML = html;
+      modal.classList.add('show');
+    }
+  }
+  
+  function closeGeneralModal() {
+    const modal = $('generalModal');
+    if (modal) modal.classList.remove('show');
+  }
+  
+  // Check if user is logged in before earning
+  function requireAuth(callback) {
+    if (currentUser) {
+      callback();
+    } else {
+      showLoginRegisterPopup(callback);
+    }
+  }
+  
+  function showLoginRegisterPopup(callback) {
+    openAuthModal(`
+      <div style="text-align:center">
+        <div class="big-ic">🔐</div>
+        <h3>Login Required</h3>
+        <p>Please login or register to earn coins!</p>
+      </div>
+      <div id="loginForm">
+        <input type="email" id="loginEmail" class="modal-input" placeholder="Email" />
+        <input type="password" id="loginPassword" class="modal-input" placeholder="Password" />
+        <button class="btn" id="doLoginBtn" style="margin-top:8px">Login</button>
+        <p style="text-align:center;margin-top:12px;color:var(--muted);font-size:12px">Don't have an account? <span style="color:var(--secondary);cursor:pointer" id="showRegisterBtn">Register</span></p>
+      </div>
+    `);
+    
+    $('doLoginBtn')?.addEventListener('click', async () => {
+      const email = $('loginEmail').value;
+      const password = $('loginPassword').value;
+      if (!email || !password) {
+        toast('Please fill all fields', '');
+        return;
+      }
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        currentUser = userCredential.user;
+        closeAuthModal();
+        toast('Login successful!', 'success');
+        if (callback) callback();
+        loadUserData();
+      } catch (error) {
+        toast('Login failed: ' + error.message, '');
+      }
+    });
+    
+    $('showRegisterBtn')?.addEventListener('click', () => {
+      showRegisterPopup(callback);
+    });
+  }
+  
+  function showRegisterPopup(callback) {
+    openAuthModal(`
+      <div style="text-align:center">
+        <div class="big-ic">📝</div>
+        <h3>Create Account</h3>
+        <p>Register to start earning!</p>
+      </div>
+      <div id="registerForm">
+        <input type="text" id="regName" class="modal-input" placeholder="Full Name" />
+        <input type="email" id="regEmail" class="modal-input" placeholder="Email" />
+        <input type="password" id="regPassword" class="modal-input" placeholder="Password" />
+        <input type="text" id="regReferralCode" class="modal-input" placeholder="Referral Code (Optional)" />
+        <button class="btn" id="doRegisterBtn" style="margin-top:8px">Register</button>
+        <p style="text-align:center;margin-top:12px;color:var(--muted);font-size:12px">Already have an account? <span style="color:var(--secondary);cursor:pointer" id="showLoginBtn">Login</span></p>
+      </div>
+    `);
+    
+    $('doRegisterBtn')?.addEventListener('click', async () => {
+      const name = $('regName').value;
+      const email = $('regEmail').value;
+      const password = $('regPassword').value;
+      const referralCode = $('regReferralCode').value;
+      
+      if (!name || !email || !password) {
+        toast('Please fill all required fields', '');
+        return;
+      }
+      
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(userCredential.user, { displayName: name });
+        currentUser = userCredential.user;
+        
+        // Create user document in Firestore
+        await setDoc(doc(db, 'users', currentUser.uid), {
+          uid: currentUser.uid,
+          name: name,
+          email: email,
+          balance: 0,
+          totalEarned: 0,
+          streakDay: 0,
+          lastDailyBonus: 0,
+          spinsUsedToday: 0,
+          scratchUsedToday: 0,
+          adsWatchedToday: 0,
+          completedTasks: [],
+          referrals: [],
+          referralEarned: 0,
+          createdAt: Date.now()
+        });
+        
+        // Handle referral code
+        if (referralCode) {
+          const referralQuery = query(collection(db, 'users'), where('referralCode', '==', referralCode));
+          const referralSnapshot = await getDocs(referralQuery);
+          if (!referralSnapshot.empty) {
+            const referrerId = referralSnapshot.docs[0].id;
+            const bonus = settings?.referrerBonus || 100;
+            await updateDoc(doc(db, 'users', referrerId), {
+              referralEarned: increment(bonus),
+              balance: increment(bonus),
+              referrals: arrayUnion({
+                userId: currentUser.uid,
+                name: name,
+                joinedAt: Date.now(),
+                bonusGiven: bonus
+              })
+            });
+          }
+        }
+        
+        closeAuthModal();
+        toast('Registration successful!', 'success');
+        if (callback) callback();
+        loadUserData();
+      } catch (error) {
+        toast('Registration failed: ' + error.message, '');
+      }
+    });
+    
+    $('showLoginBtn')?.addEventListener('click', () => {
+      showLoginRegisterPopup(callback);
+    });
+  }
+  
+  // Add coins function
+  function addCoins(amount, reason = '') {
+    if (!currentUser || !userData) {
+      showLoginRegisterPopup(() => addCoins(amount, reason));
+      return;
+    }
+    
+    const newBalance = (userData.balance || 0) + amount;
+    updateDoc(doc(db, 'users', currentUser.uid), {
+      balance: newBalance,
+      totalEarned: (userData.totalEarned || 0) + amount,
+      lastActiveDate: new Date().toDateString()
+    }).then(() => {
+      userData.balance = newBalance;
+      userData.totalEarned = (userData.totalEarned || 0) + amount;
+      updateBalDisplay();
+      toast(`+${amount} coins!`, 'success');
+      confetti();
+    }).catch(err => console.error('Add coins error:', err));
+  }
+  
+  function updateBalDisplay() {
+    if (userData) {
+      const balance = userData.balance || 0;
+      const balanceEl = $('balance');
+      const balanceTkEl = $('balanceTk');
+      if (balanceEl) balanceEl.textContent = balance.toLocaleString();
+      if (balanceTkEl && settings) {
+        const rate = settings.coinToBdtRate || 0.01;
+        const tk = (balance * rate).toFixed(2);
+        balanceTkEl.textContent = tk;
+      }
+      const availableTk = $('availableTk');
+      if (availableTk && settings) {
+        const rate = settings.coinToBdtRate || 0.01;
+        availableTk.textContent = `৳ ${((userData.balance || 0) * rate).toFixed(2)}`;
+      }
+    }
+  }
+  
+  function updateUIWithSettings() {
+    if (!settings) return;
+    $('adRewardText').textContent = `+${settings.adReward || 15} coins`;
+    $('dailyBonusText').textContent = `+${settings.dailyBonus?.[userData?.streakDay || 1] || 10}`;
+    $('spinCostText').textContent = `${settings.spinCost || 50} coins`;
+    $('spinFreeInfo').textContent = `${settings.freeSpinsPerDay || 3} free spins available`;
+    $('streakBonus').textContent = `+${settings.streakBonus || 10}`;
+    $('minWithdrawText').textContent = `Min ৳${settings.minWithdraw || 100}`;
+    $('referrerBonusText').textContent = `Earn ${settings.referrerBonus || 100} coins per friend`;
+    $('commissionText').textContent = `Plus ${settings.lifetimeCommission || 10}% commission`;
+    
+    const cardsLeft = (settings.freeScratchCardsPerDay || 5) - (userData?.scratchUsedToday || 0);
+    $('scratchCardsText').textContent = `${cardsLeft} cards left`;
+    
+    // Chips
+    const chipsDiv = $('amountChips');
+    if (chipsDiv && settings.quickAmounts) {
+      chipsDiv.innerHTML = settings.quickAmounts.map(amt => 
+        `<div class="chip" data-amount="${amt}">৳${amt}</div>`
+      ).join('');
+      document.querySelectorAll('#amountChips .chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          document.querySelectorAll('#amountChips .chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          $('wdAmount').value = chip.dataset.amount;
+        });
+      });
+    }
+  }
+  
+  // Navigation
+  window.go = function(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const target = $('page-' + page);
+    if (target) target.classList.add('active');
+    document.querySelectorAll('.nav-item[data-page]').forEach(n => {
+      n.classList.toggle('active', n.dataset.page === page);
+    });
+    const pagesDiv = document.querySelector('.pages');
+    if (pagesDiv) pagesDiv.scrollTop = 0;
+  };
+  
+  // Watch Ad
+  function watchAd() {
+    requireAuth(() => {
+      if (!settings) return;
+      openGeneralModal(`
+        <div class="big-ic">📺</div>
+        <h3>Loading Ad...</h3>
+        <p>Please watch the full ad to earn coins</p>
+        <div class="ad-loader"><div id="adBar" style="width:0%;height:4px;background:linear-gradient(90deg,var(--primary),var(--secondary));transition:width 0.3s"></div></div>
+        <p id="adTimer" style="margin-top:8px;color:var(--secondary)">${settings.adWatchTime || 20}s remaining</p>
+      `);
+      let pct = 0;
+      let t = settings.adWatchTime || 20;
+      const interval = setInterval(() => {
+        pct += (100 / ((settings.adWatchTime || 20) * 5));
+        t = Math.max(0, (settings.adWatchTime || 20) - Math.floor(pct / 5));
+        const adBar = $('adBar');
+        const adTimer = $('adTimer');
+        if (adBar) adBar.style.width = pct + '%';
+        if (adTimer) adTimer.textContent = t + 's remaining';
+        if (pct >= 100) {
+          clearInterval(interval);
+          closeGeneralModal();
+          addCoins(settings.adReward || 15, 'Watched ad');
+          openGeneralModal(`
+            <div class="big-ic" style="background:linear-gradient(135deg,var(--gold),#ff9f1a)">🎉</div>
+            <h3>+${settings.adReward || 15} Coins Earned!</h3>
+            <p>Thanks for watching</p>
+            <button class="btn gold" onclick="closeGeneralModal()">CLAIM REWARD</button>
+          `);
+        }
+      }, 200);
+    });
+  }
+  
+  // Daily Bonus
+  function dailyBonus() {
+    requireAuth(() => {
+      if (!settings) return;
+      const lastClaim = userData?.lastDailyBonus || 0;
+      const now = Date.now();
+      const dayInMs = 24 * 60 * 60 * 1000;
+      
+      if (now - lastClaim < dayInMs) {
+        const hoursLeft = Math.ceil((dayInMs - (now - lastClaim)) / (60 * 60 * 1000));
+        toast(`Come back in ${hoursLeft} hours!`, '');
+        return;
+      }
+      
+      const streakDay = (userData?.streakDay || 0) + 1;
+      const bonus = settings.dailyBonus?.[streakDay] || settings.dailyBonus?.[1] || 10;
+      
+      addCoins(bonus, `Daily bonus day ${streakDay}`);
+      
+      updateDoc(doc(db, 'users', currentUser.uid), {
+        lastDailyBonus: now,
+        streakDay: streakDay,
+        lastStreakDate: now
+      }).catch(err => console.error('Daily bonus error:', err));
+    });
+  }
+  
+  // Complete Task
+  window.completeTask = function(taskId, reward, btnElement) {
+    requireAuth(() => {
+      btnElement.textContent = '...';
+      setTimeout(() => {
+        addCoins(reward, `Completed task`);
+        btnElement.textContent = 'Done ✓';
+        btnElement.style.background = 'var(--success)';
+        btnElement.style.color = '#002a17';
+        btnElement.disabled = true;
+        
+        const completedTasks = userData?.completedTasks || [];
+        if (!completedTasks.includes(taskId)) {
+          updateDoc(doc(db, 'users', currentUser.uid), {
+            completedTasks: arrayUnion(taskId)
+          }).catch(err => console.error('Task complete error:', err));
+        }
+      }, 800);
+    });
+  };
+  
+  // Spin Wheel
+  function spinWheel() {
+    requireAuth(async () => {
+      if (spinning) return;
+      if (!settings || !wheelSegments.length) return;
+      
+      const spinCost = settings.spinCost || 50;
+      const freeSpinsLeft = (settings.freeSpinsPerDay || 3) - (userData?.spinsUsedToday || 0);
+      
+      if (freeSpinsLeft <= 0 && (userData?.balance || 0) < spinCost) {
+        toast(`Need ${spinCost} coins to spin!`, '');
+        return;
+      }
+      
+      spinning = true;
+      const spinBtn = $('spinNowBtn');
+      if (spinBtn) spinBtn.textContent = 'Spinning...';
+      
+      if (freeSpinsLeft <= 0) {
+        const newBalance = (userData.balance || 0) - spinCost;
+        await updateDoc(doc(db, 'users', currentUser.uid), { balance: newBalance });
+        userData.balance = newBalance;
+        updateBalDisplay();
+      } else {
+        await updateDoc(doc(db, 'users', currentUser.uid), {
+          spinsUsedToday: (userData?.spinsUsedToday || 0) + 1
+        });
+      }
+      
+      const idx = Math.floor(Math.random() * wheelSegments.length);
+      const reward = wheelSegments[idx].reward;
+      const angleStep = 360 / wheelSegments.length;
+      const target = 360 * 6 + (360 - idx * angleStep - angleStep / 2);
+      currentRot += target;
+      const wheel = $('wheel');
+      if (wheel) wheel.style.transform = `rotate(${currentRot}deg)`;
+      
+      setTimeout(() => {
+        spinning = false;
+        if (spinBtn) spinBtn.textContent = '🎯 SPIN NOW';
+        addCoins(reward, `Spin wheel win`);
+        openGeneralModal(`
+          <div class="big-ic" style="background:linear-gradient(135deg,var(--gold),#ff9f1a)">🏆</div>
+          <h3>You Won!</h3>
+          <p>Coins added to your balance</p>
+          <div style="font-size:42px;font-weight:800;color:var(--gold);margin:14px 0">+${reward} 🪙</div>
+          <button class="btn gold" onclick="closeGeneralModal()">AWESOME</button>
+        `);
+      }, 5200);
+    });
+  }
+  
+  // Build Wheel
+  function buildWheelLabels() {
+    if (!wheelSegments.length) return;
+    const w = $('wheelLabels');
+    if (!w) return;
+    w.innerHTML = '';
+    const angleStep = 360 / wheelSegments.length;
+    wheelSegments.forEach((segment, i) => {
+      const s = document.createElement('span');
+      s.textContent = segment.reward;
+      const ang = i * angleStep + angleStep / 2;
+      const radius = 110;
+      s.style.transform = `rotate(${ang}deg) translate(0, -${radius}px) rotate(-${ang}deg)`;
+      w.appendChild(s);
+    });
+  }
+  
+  // Scratch Cards
+  function buildScratch() {
+    if (!settings) return;
+    const wrap = $('scratchWrap');
+    if (!wrap) return;
+    wrap.innerHTML = '';
+    const cardsLeft = (settings.freeScratchCardsPerDay || 5) - (userData?.scratchUsedToday || 0);
+    const minReward = settings.minScratchReward || 5;
+    const maxReward = settings.maxScratchReward || 500;
+    
+    for (let i = 0; i < Math.min(cardsLeft, 4); i++) {
+      const reward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
+      const card = document.createElement('div');
+      card.className = 'scratch';
+      card.innerHTML = `<div class="reveal">🪙 +${reward}</div><div class="cover">SCRATCH<br>HERE</div>`;
+      card.onclick = () => {
+        requireAuth(() => {
+          if (card.classList.contains('opened')) return;
+          card.classList.add('opened');
+          addCoins(reward, `Scratch card win`);
+          updateDoc(doc(db, 'users', currentUser.uid), {
+            scratchUsedToday: (userData?.scratchUsedToday || 0) + 1
+          });
+          if (Math.random() > 0.5) confetti();
+        });
+      };
+      wrap.appendChild(card);
+    }
+  }
+  
+  function resetScratch() {
+    requireAuth(() => {
+      if (!settings) return;
+      const cost = settings.scratchCardCost || 100;
+      if ((userData?.balance || 0) < cost) {
+        toast(`Need ${cost} coins to buy scratch cards!`, '');
+        return;
+      }
+      
+      const newBalance = (userData.balance || 0) - cost;
+      updateDoc(doc(db, 'users', currentUser.uid), {
+        balance: newBalance,
+        scratchUsedToday: 0
+      }).then(() => {
+        userData.balance = newBalance;
+        updateBalDisplay();
+        buildScratch();
+        toast('New cards loaded!', 'success');
+      });
+    });
+  }
+  
+  // Copy Referral Link
+  function copyRef() {
+    const link = $('refLink')?.textContent;
+    if (link && navigator.clipboard) {
+      navigator.clipboard.writeText(link);
+      toast('Link copied!', 'success');
+    }
+  }
+  
+  // Submit Withdraw
+  function submitWithdraw() {
+    requireAuth(async () => {
+      if (!settings) return;
+      const amount = parseInt($('wdAmount')?.value);
+      const mobile = $('mobileNumber')?.value;
+      const methodEl = document.querySelector('.method.active');
+      const method = methodEl?.dataset.method || 'bKash';
+      const minWithdraw = settings.minWithdraw || 100;
+      const maxWithdraw = settings.maxWithdrawPerDay || 2000;
+      const balanceTk = (userData.balance || 0) * (settings.coinToBdtRate || 0.01);
+      
+      if (!amount || amount < minWithdraw) {
+        toast(`Minimum withdraw amount is ৳${minWithdraw}`, '');
+        return;
+      }
+      if (amount > maxWithdraw) {
+        toast(`Maximum withdraw per day is ৳${maxWithdraw}`, '');
+        return;
+      }
+      if (amount > balanceTk) {
+        toast(`Insufficient balance!`, '');
+        return;
+      }
+      if (!mobile || mobile.length < 11) {
+        toast(`Enter valid mobile number`, '');
+        return;
+      }
+      
+      const btn = $('submitWdBtn');
+      if (btn) btn.textContent = 'Processing...';
+      
+      const coinsRequired = Math.ceil(amount / (settings.coinToBdtRate || 0.01));
+      const newBalance = (userData.balance || 0) - coinsRequired;
+      
+      await addDoc(collection(db, 'withdrawRequests'), {
+        userId: currentUser.uid,
+        userName: userData.name || 'User',
+        amount: amount,
+        coins: coinsRequired,
+        method: method,
+        mobile: mobile,
+        status: 'pending',
+        timestamp: Date.now()
+      });
+      
+      await updateDoc(doc(db, 'users', currentUser.uid), { balance: newBalance });
+      userData.balance = newBalance;
+      updateBalDisplay();
+      
+      if (btn) btn.textContent = '💸 REQUEST WITHDRAW';
+      openGeneralModal(`
+        <div class="big-ic" style="background:linear-gradient(135deg,var(--success),var(--secondary))">✅</div>
+        <h3>Request Submitted!</h3>
+        <p>You'll receive payment within 24 hours</p>
+        <button class="btn success" onclick="closeGeneralModal()">DONE</button>
+      `);
+      confetti();
+    });
+  }
+  
+  // Load User Data
+  async function loadUserData() {
+    if (!currentUser) return;
+    const userRef = doc(db, 'users', currentUser.uid);
+    const userDoc = await getDoc(userRef);
+    if (userDoc.exists()) {
+      userData = userDoc.data();
+    } else {
+      userData = {
+        uid: currentUser.uid,
+        name: currentUser.displayName || 'User',
+        email: currentUser.email || '',
+        balance: 0,
+        totalEarned: 0,
+        streakDay: 0,
+        lastDailyBonus: 0,
+        spinsUsedToday: 0,
+        scratchUsedToday: 0,
+        adsWatchedToday: 0,
+        completedTasks: [],
+        referrals: [],
+        referralEarned: 0,
+        createdAt: Date.now()
+      };
+      await setDoc(userRef, userData);
+    }
+    updateBalDisplay();
+    updateProfileUI();
+    
+    // Setup realtime listener
+    onSnapshot(userRef, (doc) => {
+      if (doc.exists()) {
+        userData = doc.data();
+        updateBalDisplay();
+        updateProfileUI();
+        buildScratch();
+        renderTasks();
+      }
+    });
+  }
+  
+  function updateProfileUI() {
+    if (!userData) return;
+    const name = userData.name || 'User';
+    $('avatarLetter').textContent = name.charAt(0).toUpperCase();
+    $('userName').textContent = name;
+    $('userEmail').textContent = userData.email || `ID: ${currentUser?.uid?.slice(0,8)}`;
+    
+    const loginBtn = $('loginRegisterBtn');
+    if (loginBtn) {
+      loginBtn.textContent = currentUser ? `👤 ${name}` : '🔐 Login / Register';
+      if (currentUser) {
+        loginBtn.style.background = 'linear-gradient(135deg, var(--success), var(--secondary))';
+        loginBtn.style.color = '#fff';
+      } else {
+        loginBtn.style.background = 'linear-gradient(135deg, var(--gold), #ff9f1a)';
+        loginBtn.style.color = '#1a1300';
+      }
+    }
+  }
+  
+  // Load Settings
+  async function loadSettings() {
+    const settingsDoc = await getDoc(doc(db, 'settings', 'appSettings'));
+    if (settingsDoc.exists()) {
+      settings = settingsDoc.data();
+    } else {
+      settings = {
+        adReward: 15,
+        adWatchTime: 20,
+        dailyBonus: {1:10,2:20,3:35,4:50,5:75,6:100,7:250},
+        spinCost: 50,
+        freeSpinsPerDay: 3,
+        freeScratchCardsPerDay: 5,
+        minScratchReward: 5,
+        maxScratchReward: 500,
+        scratchCardCost: 100,
+        streakBonus: 10,
+        minWithdraw: 100,
+        maxWithdrawPerDay: 2000,
+        coinToBdtRate: 0.01,
+        referrerBonus: 100,
+        lifetimeCommission: 10,
+        quickAmounts: [100, 200, 500, 1000]
+      };
+    }
+    updateUIWithSettings();
+    
+    // Listen for settings changes
+    onSnapshot(doc(db, 'settings', 'appSettings'), (doc) => {
+      if (doc.exists()) {
+        settings = doc.data();
+        updateUIWithSettings();
+      }
+    });
+  }
+  
+  // Load Wheel Segments
+  async function loadWheelSegments() {
+    const segmentsQuery = query(collection(db, 'wheelSegments'), orderBy('order', 'asc'));
+    const snapshot = await getDocs(segmentsQuery);
+    wheelSegments = [];
+    snapshot.forEach(doc => {
+      wheelSegments.push({ id: doc.id, ...doc.data() });
+    });
+    if (wheelSegments.length === 0) {
+      wheelSegments = [
+        { reward: 10, probability: 30, order: 1 },
+        { reward: 50, probability: 25, order: 2 },
+        { reward: 100, probability: 20, order: 3 },
+        { reward: 250, probability: 13, order: 4 },
+        { reward: 500, probability: 10, order: 5 },
+        { reward: 1000, probability: 2, order: 6 }
+      ];
+    }
+    buildWheelLabels();
+  }
+  
+  // Load Tasks
+  async function loadTasks() {
+    const tasksQuery = query(collection(db, 'tasks'), where('active', '==', true));
+    const snapshot = await getDocs(tasksQuery);
+    tasks = [];
+    snapshot.forEach(doc => {
+      tasks.push({ id: doc.id, ...doc.data() });
+    });
+    renderTasks();
+  }
+  
+  function renderTasks() {
+    const tasksList = $('tasksList');
+    if (!tasksList) return;
+    tasksList.innerHTML = '';
+    const completedTasks = userData?.completedTasks || [];
+    const activeTasks = tasks.filter(t => !completedTasks.includes(t.id));
+    $('taskCount').textContent = `${activeTasks.length} active`;
+    
+    tasks.forEach(task => {
+      const isCompleted = completedTasks.includes(task.id);
+      tasksList.innerHTML += `
+        <div class="task">
+          <div class="tic">${task.icon || '✅'}</div>
+          <div class="meta">
+            <h5>${task.name}</h5>
+            <p>${task.description || ''}</p>
+          </div>
+          <div class="rew">
+            <b>+${task.reward}</b><br>
+            <button class="task-complete-btn" data-id="${task.id}" data-reward="${task.reward}" ${isCompleted ? 'disabled style="opacity:0.5"' : ''}>
+              ${isCompleted ? 'Done ✓' : 'Start'}
+            </button>
+          </div>
+        </div>
+      `;
+    });
+    
+    document.querySelectorAll('.task-complete-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const taskId = btn.dataset.id;
+        const reward = parseInt(btn.dataset.reward);
+        window.completeTask(taskId, reward, btn);
+      });
+    });
+  }
+  
+  // Load Referral Stats
+  async function loadReferralStats() {
+    if (!currentUser) return;
+    const referralsQuery = query(collection(db, 'referrals'), where('referrerId', '==', currentUser.uid));
+    const snapshot = await getDocs(referralsQuery);
+    const referrals = [];
+    snapshot.forEach(doc => {
+      referrals.push(doc.data());
+    });
+    $('invitedCount').textContent = referrals.length;
+    const joined = referrals.filter(r => r.joined).length;
+    $('joinedCount').textContent = joined;
+    $('referralEarned').textContent = userData?.referralEarned || 0;
+    
+    const refLink = `https://earnkoro.web.app/?ref=${currentUser.uid}`;
+    $('refLink').textContent = refLink;
+    
+    const referralsList = $('referralsList');
+    if (referralsList) {
+      referralsList.innerHTML = '';
+      referrals.slice(0, 5).forEach(ref => {
+        referralsList.innerHTML += `
+          <div class="task">
+            <div class="tic">👤</div>
+            <div class="meta">
+              <h5>${ref.name || 'User'}</h5>
+              <p>Joined ${new Date(ref.joinedAt).toLocaleDateString()}</p>
+            </div>
+            <div class="rew">
+              <b style="color:var(--success)">+${ref.bonusGiven || 0}</b>
+            </div>
+          </div>
+        `;
+      });
+    }
+  }
+  
+  // Event Listeners
+  function initEventListeners() {
+    $('watchAdBtn')?.addEventListener('click', watchAd);
+    $('dailyBonusBtn')?.addEventListener('click', dailyBonus);
+    $('spinNowBtn')?.addEventListener('click', spinWheel);
+    $('resetScratchBtn')?.addEventListener('click', resetScratch);
+    $('copyRefBtn')?.addEventListener('click', copyRef);
+    $('submitWdBtn')?.addEventListener('click', submitWithdraw);
+    $('fabAdBtn')?.addEventListener('click', watchAd);
+    $('loginRegisterBtn')?.addEventListener('click', () => showLoginRegisterPopup());
+    $('spinNavBtn')?.addEventListener('click', () => go('spin'));
+    $('scratchNavBtn')?.addEventListener('click', () => go('scratch'));
+    $('withdrawBtn')?.addEventListener('click', () => go('withdraw'));
+    $('inviteBtn')?.addEventListener('click', () => go('referral'));
+    
+    document.querySelectorAll('.method').forEach(method => {
+      method.addEventListener('click', () => {
+        document.querySelectorAll('.method').forEach(m => m.classList.remove('active'));
+        method.classList.add('active');
+      });
+    });
+  }
+  
+  // Auth State Listener
+  onAuthStateChanged(auth, async (user) => {
+    currentUser = user;
+    if (user) {
+      await loadUserData();
+      await loadReferralStats();
+      renderTasks();
+      buildScratch();
+    } else {
+      userData = null;
+      updateProfileUI();
+      $('balance').textContent = '0';
+      $('balanceTk').textContent = '0';
+      $('availableTk').textContent = '৳ 0';
+    }
+    hideLoading();
+  });
+  
+  // Initialize App
+  async function init() {
+    await loadSettings();
+    await loadWheelSegments();
+    await loadTasks();
+    initEventListeners();
+    
+    // Check URL for referral
+    const urlParams = new URLSearchParams(window.location.search);
+    const refId = urlParams.get('ref');
+    if (refId) {
+      localStorage.setItem('pendingReferral', refId);
+    }
+  }
+  
+  init();
+  
+  // Expose functions to global scope
+  window.go = go;
+  window.closeGeneralModal = closeGeneralModal;
+  window.completeTask = window.completeTask;
+</script>
+</body>
+</html>
