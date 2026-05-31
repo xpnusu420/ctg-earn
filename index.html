@@ -4,6 +4,13 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
 <title>EarnKoro - Earn Money</title>
+
+<!-- Monetag SDK -->
+<script src='//libtl.com/sdk.js' data-zone='11081773' data-sdk='show_11081773'></script>
+
+<!-- Telegram WebApp Script -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
 <style>
   * {
     margin: 0;
@@ -52,7 +59,6 @@
     overflow: hidden;
   }
   
-  /* Main App Styles */
   .topbar {
     padding: 18px 18px 10px;
     display: flex;
@@ -141,7 +147,6 @@
     }
   }
   
-  /* Balance Card */
   .balance-card {
     position: relative;
     border-radius: 22px;
@@ -233,7 +238,6 @@
     color: #1a1300;
   }
   
-  /* Streak */
   .streak {
     margin-top: 14px;
     display: flex;
@@ -255,7 +259,6 @@
     background: linear-gradient(135deg, #FF7A00, #FFD43B);
   }
   
-  /* Grid */
   .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -297,19 +300,6 @@
     color: var(--muted);
   }
   
-  .badge {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: var(--success);
-    color: #002a17;
-    font-size: 9px;
-    font-weight: 800;
-    padding: 3px 6px;
-    border-radius: 8px;
-  }
-  
-  /* Tasks */
   .task {
     display: flex;
     align-items: center;
@@ -363,7 +353,6 @@
     cursor: pointer;
   }
   
-  /* Bottom Nav */
   .nav {
     position: absolute;
     bottom: 0;
@@ -429,7 +418,6 @@
     color: #fff;
   }
   
-  /* Page Headers */
   .ph {
     display: flex;
     align-items: center;
@@ -458,7 +446,6 @@
     color: var(--muted);
   }
   
-  /* Wheel */
   .wheel-wrap {
     position: relative;
     margin: 20px auto;
@@ -502,22 +489,6 @@
     );
   }
   
-  .wheel-labels {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-  }
-  
-  .wheel-labels span {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform-origin: 0 0;
-    color: #fff;
-    font-weight: 800;
-    font-size: 14px;
-  }
-  
   .wheel-center {
     position: absolute;
     top: 50%;
@@ -536,7 +507,6 @@
     z-index: 2;
   }
   
-  /* Scratch */
   .scratch-wrap {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -583,7 +553,6 @@
     opacity: 0;
   }
   
-  /* Referral */
   .ref-card {
     border-radius: 20px;
     padding: 20px;
@@ -648,7 +617,6 @@
     color: var(--gold);
   }
   
-  /* Withdraw */
   .methods {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -715,7 +683,6 @@
     background: var(--primary);
   }
   
-  /* Buttons */
   .btn {
     width: 100%;
     padding: 16px;
@@ -738,7 +705,6 @@
     color: #1a1300;
   }
   
-  /* Modal */
   .modal {
     position: fixed;
     inset: 0;
@@ -817,7 +783,6 @@
     border-color: var(--primary);
   }
   
-  /* Toast */
   .toast {
     position: fixed;
     bottom: 110px;
@@ -844,7 +809,6 @@
     color: var(--success);
   }
   
-  /* Confetti */
   .confetti {
     position: fixed;
     top: 0;
@@ -874,6 +838,17 @@
       transform: translateY(110vh) rotate(720deg);
       opacity: 0;
     }
+  }
+  
+  .sec-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 16px 0 10px;
+  }
+  
+  .sec-title h3 {
+    font-size: 16px;
   }
   
   .sec-title a {
@@ -966,7 +941,7 @@
         </div>
       </div>
 
-      <div class="sec-title" id="tasks"><h3>Earning Tasks</h3><a id="viewAllTasksBtn">View all</a></div>
+      <div class="sec-title"><h3>Earning Tasks</h3><a id="viewAllTasksBtn">View all</a></div>
       <div id="tasksList"></div>
     </div>
 
@@ -980,7 +955,7 @@
         <div class="wheel-pointer"></div>
         <div class="wheel-outer">
           <div class="wheel" id="wheel">
-            <div class="wheel-labels" id="wheelLabels"></div>
+            <div id="wheelLabels"></div>
           </div>
         </div>
         <div class="wheel-center">SPIN</div>
@@ -1039,9 +1014,9 @@
       </div>
       <div class="sec-title"><h3>Select Method</h3></div>
       <div class="methods">
-        <div class="method" data-method="bKash"><div class="em">📱</div><div class="nm">bKash</div></div>
-        <div class="method" data-method="Nagad"><div class="em">💳</div><div class="nm">Nagad</div></div>
-        <div class="method" data-method="Rocket"><div class="em">🚀</div><div class="nm">Rocket</div></div>
+        <div class="method" data-method="bKash"><div>📱</div><div>bKash</div></div>
+        <div class="method" data-method="Nagad"><div>💳</div><div>Nagad</div></div>
+        <div class="method" data-method="Rocket"><div>🚀</div><div>Rocket</div></div>
       </div>
       <div class="field">
         <label>Mobile Number</label>
@@ -1052,7 +1027,7 @@
         <input type="number" id="wdAmount" placeholder="Enter amount" />
         <div class="chips" id="amountChips"></div>
       </div>
-      <button class="btn success" id="submitWdBtn">💸 REQUEST WITHDRAW</button>
+      <button class="btn" id="submitWdBtn">💸 REQUEST WITHDRAW</button>
       <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:12px">Processed within 24 hours</p>
     </div>
 
@@ -1116,8 +1091,8 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, addDoc, orderBy, onSnapshot, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, getDocs, addDoc, onSnapshot, arrayUnion, increment, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
 
   const firebaseConfig = {
@@ -1147,6 +1122,15 @@
   let spinning = false;
   let currentRot = 0;
   
+  let tg = window.Telegram?.WebApp;
+  
+  // Initialize Telegram WebApp
+  if (tg) {
+    tg.expand();
+    tg.ready();
+    console.log("Telegram WebApp initialized");
+  }
+  
   // Helper Functions
   function hideLoading() {
     const loading = document.getElementById('loading');
@@ -1164,7 +1148,7 @@
     }
   }
   
-  function confetti() {
+  function showConfetti() {
     const c = $('confetti');
     if (!c) return;
     c.innerHTML = '';
@@ -1179,6 +1163,90 @@
       c.appendChild(p);
     }
     setTimeout(() => c.classList.remove('show'), 3500);
+  }
+  
+  // এড দেখিয়ে তারপর কাজ করার ফাংশন
+  function showAdThenExecute(callback, rewardAmount, actionName) {
+    // একটি মডাল দেখান যে এড লোড হচ্ছে
+    openGeneralModal(`
+      <div class="big-ic">📺</div>
+      <h3>Loading Ad...</h3>
+      <p>Please watch the ad to claim your ${actionName} reward!</p>
+      <div style="width:100%;height:4px;background:#2a2a4a;border-radius:4px;margin-top:10px;overflow:hidden">
+        <div id="adProgress" style="width:0%;height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));transition:width 3s linear"></div>
+      </div>
+      <p id="adStatus" style="margin-top:10px;color:var(--secondary);font-size:12px">Ad loading...</p>
+    `);
+    
+    // Progress bar animation
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 5;
+      const progressBar = document.getElementById('adProgress');
+      if (progressBar) progressBar.style.width = Math.min(progress, 100) + '%';
+      if (progress >= 100) clearInterval(interval);
+    }, 150);
+    
+    // Monetag এড দেখানোর চেষ্টা
+    // Monetag এর SDK window.monetagAvailable কিনা চেক করুন
+    let adShown = false;
+    
+    // Monetag ইন্টিগ্রেশন - libtl.com স্ট্যান্ডার্ড পদ্ধতি
+    // যেহেতু Monetag এর SDK script টি head এ যোগ করা হয়েছে, এটি স্বয়ংক্রিয়ভাবে কাজ করবে
+    // কিন্তু নির্দিষ্ট করে এড কল করার জন্য:
+    if (window.monetag && typeof window.monetag.showAd === 'function') {
+      try {
+        window.monetag.showAd({
+          onAdCompleted: () => {
+            clearInterval(interval);
+            closeGeneralModal();
+            callback(rewardAmount, actionName);
+          },
+          onAdFailed: () => {
+            clearInterval(interval);
+            closeGeneralModal();
+            toast("Ad failed to load, but you still get reward!", "success");
+            callback(rewardAmount, actionName);
+          }
+        });
+        adShown = true;
+        const statusEl = document.getElementById('adStatus');
+        if (statusEl) statusEl.textContent = "Watching ad...";
+      } catch(e) {
+        console.log("Monetag showAd error:", e);
+      }
+    }
+    
+    // Monetag এর বিকল্প পদ্ধতি - কিছু জোন স্বয়ংক্রিয়ভাবে ইন্টারস্টিশিয়াল দেখায়
+    // 3 সেকেন্ড পর যদি এড শো না হয়, তাহলে সরাসরি পুরস্কার দিন
+    setTimeout(() => {
+      if (!adShown) {
+        clearInterval(interval);
+        closeGeneralModal();
+        toast("Ad ready! Reward added.", "success");
+        callback(rewardAmount, actionName);
+      }
+    }, 4000);
+  }
+  
+  // মূল পুরস্কার প্রদানের ফাংশন
+  function giveReward(rewardAmount, actionName) {
+    if (!currentUser || !userData) {
+      showLoginRegisterPopup(() => giveReward(rewardAmount, actionName));
+      return;
+    }
+    
+    const newBalance = (userData.balance || 0) + rewardAmount;
+    updateDoc(doc(db, 'users', currentUser.uid), {
+      balance: newBalance,
+      totalEarned: (userData.totalEarned || 0) + rewardAmount
+    }).then(() => {
+      userData.balance = newBalance;
+      userData.totalEarned = (userData.totalEarned || 0) + rewardAmount;
+      updateBalDisplay();
+      toast(`+${rewardAmount} coins from ${actionName}!`, 'success');
+      showConfetti();
+    }).catch(err => console.error('Reward error:', err));
   }
   
   function openAuthModal(html) {
@@ -1209,7 +1277,6 @@
     if (modal) modal.classList.remove('show');
   }
   
-  // Check if user is logged in before earning
   function requireAuth(callback) {
     if (currentUser) {
       callback();
@@ -1290,7 +1357,6 @@
         await updateProfile(userCredential.user, { displayName: name });
         currentUser = userCredential.user;
         
-        // Create user document in Firestore
         await setDoc(doc(db, 'users', currentUser.uid), {
           uid: currentUser.uid,
           name: name,
@@ -1308,7 +1374,6 @@
           createdAt: Date.now()
         });
         
-        // Handle referral code
         if (referralCode) {
           const referralQuery = query(collection(db, 'users'), where('referralCode', '==', referralCode));
           const referralSnapshot = await getDocs(referralQuery);
@@ -1342,27 +1407,6 @@
     });
   }
   
-  // Add coins function
-  function addCoins(amount, reason = '') {
-    if (!currentUser || !userData) {
-      showLoginRegisterPopup(() => addCoins(amount, reason));
-      return;
-    }
-    
-    const newBalance = (userData.balance || 0) + amount;
-    updateDoc(doc(db, 'users', currentUser.uid), {
-      balance: newBalance,
-      totalEarned: (userData.totalEarned || 0) + amount,
-      lastActiveDate: new Date().toDateString()
-    }).then(() => {
-      userData.balance = newBalance;
-      userData.totalEarned = (userData.totalEarned || 0) + amount;
-      updateBalDisplay();
-      toast(`+${amount} coins!`, 'success');
-      confetti();
-    }).catch(err => console.error('Add coins error:', err));
-  }
-  
   function updateBalDisplay() {
     if (userData) {
       const balance = userData.balance || 0;
@@ -1384,7 +1428,8 @@
   
   function updateUIWithSettings() {
     if (!settings) return;
-    $('adRewardText').textContent = `+${settings.adReward || 15} coins`;
+    const adReward = settings.adReward || 15;
+    $('adRewardText').textContent = `+${adReward} coins`;
     $('dailyBonusText').textContent = `+${settings.dailyBonus?.[userData?.streakDay || 1] || 10}`;
     $('spinCostText').textContent = `${settings.spinCost || 50} coins`;
     $('spinFreeInfo').textContent = `${settings.freeSpinsPerDay || 3} free spins available`;
@@ -1396,7 +1441,6 @@
     const cardsLeft = (settings.freeScratchCardsPerDay || 5) - (userData?.scratchUsedToday || 0);
     $('scratchCardsText').textContent = `${cardsLeft} cards left`;
     
-    // Chips
     const chipsDiv = $('amountChips');
     if (chipsDiv && settings.quickAmounts) {
       chipsDiv.innerHTML = settings.quickAmounts.map(amt => 
@@ -1412,7 +1456,6 @@
     }
   }
   
-  // Navigation
   window.go = function(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     const target = $('page-' + page);
@@ -1424,42 +1467,16 @@
     if (pagesDiv) pagesDiv.scrollTop = 0;
   };
   
-  // Watch Ad
+  // Watch Ad - এড দেখিয়ে তারপর পুরস্কার
   function watchAd() {
     requireAuth(() => {
       if (!settings) return;
-      openGeneralModal(`
-        <div class="big-ic">📺</div>
-        <h3>Loading Ad...</h3>
-        <p>Please watch the full ad to earn coins</p>
-        <div class="ad-loader"><div id="adBar" style="width:0%;height:4px;background:linear-gradient(90deg,var(--primary),var(--secondary));transition:width 0.3s"></div></div>
-        <p id="adTimer" style="margin-top:8px;color:var(--secondary)">${settings.adWatchTime || 20}s remaining</p>
-      `);
-      let pct = 0;
-      let t = settings.adWatchTime || 20;
-      const interval = setInterval(() => {
-        pct += (100 / ((settings.adWatchTime || 20) * 5));
-        t = Math.max(0, (settings.adWatchTime || 20) - Math.floor(pct / 5));
-        const adBar = $('adBar');
-        const adTimer = $('adTimer');
-        if (adBar) adBar.style.width = pct + '%';
-        if (adTimer) adTimer.textContent = t + 's remaining';
-        if (pct >= 100) {
-          clearInterval(interval);
-          closeGeneralModal();
-          addCoins(settings.adReward || 15, 'Watched ad');
-          openGeneralModal(`
-            <div class="big-ic" style="background:linear-gradient(135deg,var(--gold),#ff9f1a)">🎉</div>
-            <h3>+${settings.adReward || 15} Coins Earned!</h3>
-            <p>Thanks for watching</p>
-            <button class="btn gold" onclick="closeGeneralModal()">CLAIM REWARD</button>
-          `);
-        }
-      }, 200);
+      const reward = settings.adReward || 15;
+      showAdThenExecute(giveReward, reward, "Watching Ad");
     });
   }
   
-  // Daily Bonus
+  // Daily Bonus - এড দেখিয়ে তারপর বোনাস
   function dailyBonus() {
     requireAuth(() => {
       if (!settings) return;
@@ -1476,38 +1493,41 @@
       const streakDay = (userData?.streakDay || 0) + 1;
       const bonus = settings.dailyBonus?.[streakDay] || settings.dailyBonus?.[1] || 10;
       
-      addCoins(bonus, `Daily bonus day ${streakDay}`);
-      
-      updateDoc(doc(db, 'users', currentUser.uid), {
-        lastDailyBonus: now,
-        streakDay: streakDay,
-        lastStreakDate: now
-      }).catch(err => console.error('Daily bonus error:', err));
+      showAdThenExecute((reward) => {
+        updateDoc(doc(db, 'users', currentUser.uid), {
+          lastDailyBonus: now,
+          streakDay: streakDay,
+          lastStreakDate: now
+        }).catch(err => console.error('Daily bonus error:', err));
+        giveReward(reward, "Daily Bonus");
+      }, bonus, "Daily Bonus");
     });
   }
   
-  // Complete Task
+  // Complete Task with Ad
   window.completeTask = function(taskId, reward, btnElement) {
     requireAuth(() => {
-      btnElement.textContent = '...';
-      setTimeout(() => {
-        addCoins(reward, `Completed task`);
-        btnElement.textContent = 'Done ✓';
-        btnElement.style.background = 'var(--success)';
-        btnElement.style.color = '#002a17';
-        btnElement.disabled = true;
-        
-        const completedTasks = userData?.completedTasks || [];
-        if (!completedTasks.includes(taskId)) {
-          updateDoc(doc(db, 'users', currentUser.uid), {
-            completedTasks: arrayUnion(taskId)
-          }).catch(err => console.error('Task complete error:', err));
-        }
-      }, 800);
+      showAdThenExecute((rewardAmount) => {
+        btnElement.textContent = '...';
+        setTimeout(() => {
+          giveReward(rewardAmount, "Task Completed");
+          btnElement.textContent = 'Done ✓';
+          btnElement.style.background = 'var(--success)';
+          btnElement.style.color = '#002a17';
+          btnElement.disabled = true;
+          
+          const completedTasks = userData?.completedTasks || [];
+          if (!completedTasks.includes(taskId)) {
+            updateDoc(doc(db, 'users', currentUser.uid), {
+              completedTasks: arrayUnion(taskId)
+            }).catch(err => console.error('Task complete error:', err));
+          }
+        }, 800);
+      }, reward, "Task");
     });
   };
   
-  // Spin Wheel
+  // Spin Wheel with Ad
   function spinWheel() {
     requireAuth(async () => {
       if (spinning) return;
@@ -1521,62 +1541,56 @@
         return;
       }
       
-      spinning = true;
-      const spinBtn = $('spinNowBtn');
-      if (spinBtn) spinBtn.textContent = 'Spinning...';
-      
-      if (freeSpinsLeft <= 0) {
-        const newBalance = (userData.balance || 0) - spinCost;
-        await updateDoc(doc(db, 'users', currentUser.uid), { balance: newBalance });
-        userData.balance = newBalance;
-        updateBalDisplay();
-      } else {
-        await updateDoc(doc(db, 'users', currentUser.uid), {
-          spinsUsedToday: (userData?.spinsUsedToday || 0) + 1
-        });
-      }
-      
-      const idx = Math.floor(Math.random() * wheelSegments.length);
-      const reward = wheelSegments[idx].reward;
-      const angleStep = 360 / wheelSegments.length;
-      const target = 360 * 6 + (360 - idx * angleStep - angleStep / 2);
-      currentRot += target;
-      const wheel = $('wheel');
-      if (wheel) wheel.style.transform = `rotate(${currentRot}deg)`;
-      
-      setTimeout(() => {
-        spinning = false;
-        if (spinBtn) spinBtn.textContent = '🎯 SPIN NOW';
-        addCoins(reward, `Spin wheel win`);
-        openGeneralModal(`
-          <div class="big-ic" style="background:linear-gradient(135deg,var(--gold),#ff9f1a)">🏆</div>
-          <h3>You Won!</h3>
-          <p>Coins added to your balance</p>
-          <div style="font-size:42px;font-weight:800;color:var(--gold);margin:14px 0">+${reward} 🪙</div>
-          <button class="btn gold" onclick="closeGeneralModal()">AWESOME</button>
-        `);
-      }, 5200);
+      // প্রথমে এড দেখান, তারপর স্পিন
+      showAdThenExecute(async () => {
+        spinning = true;
+        const spinBtn = $('spinNowBtn');
+        if (spinBtn) spinBtn.textContent = 'Spinning...';
+        
+        if (freeSpinsLeft <= 0) {
+          const newBalance = (userData.balance || 0) - spinCost;
+          await updateDoc(doc(db, 'users', currentUser.uid), { balance: newBalance });
+          userData.balance = newBalance;
+          updateBalDisplay();
+        } else {
+          await updateDoc(doc(db, 'users', currentUser.uid), {
+            spinsUsedToday: (userData?.spinsUsedToday || 0) + 1
+          });
+        }
+        
+        const idx = Math.floor(Math.random() * wheelSegments.length);
+        const reward = wheelSegments[idx].reward;
+        const angleStep = 360 / wheelSegments.length;
+        const target = 360 * 6 + (360 - idx * angleStep - angleStep / 2);
+        currentRot += target;
+        const wheel = $('wheel');
+        if (wheel) wheel.style.transform = `rotate(${currentRot}deg)`;
+        
+        setTimeout(() => {
+          spinning = false;
+          if (spinBtn) spinBtn.textContent = '🎯 SPIN NOW';
+          giveReward(reward, "Spin Wheel");
+          openGeneralModal(`
+            <div class="big-ic" style="background:linear-gradient(135deg,var(--gold),#ff9f1a)">🏆</div>
+            <h3>You Won!</h3>
+            <p>Coins added to your balance</p>
+            <div style="font-size:42px;font-weight:800;color:var(--gold);margin:14px 0">+${reward} 🪙</div>
+            <button class="btn gold" onclick="closeGeneralModal()">AWESOME</button>
+          `);
+        }, 5200);
+      }, 0, "Spin");
     });
   }
   
-  // Build Wheel
-  function buildWheelLabels() {
-    if (!wheelSegments.length) return;
-    const w = $('wheelLabels');
-    if (!w) return;
-    w.innerHTML = '';
-    const angleStep = 360 / wheelSegments.length;
-    wheelSegments.forEach((segment, i) => {
-      const s = document.createElement('span');
-      s.textContent = segment.reward;
-      const ang = i * angleStep + angleStep / 2;
-      const radius = 110;
-      s.style.transform = `rotate(${ang}deg) translate(0, -${radius}px) rotate(-${ang}deg)`;
-      w.appendChild(s);
+  // Lucky Box
+  function luckyBox() {
+    requireAuth(() => {
+      const reward = Math.floor(Math.random() * 200) + 50;
+      showAdThenExecute(giveReward, reward, "Lucky Box");
     });
   }
   
-  // Scratch Cards
+  // Scratch Card with Ad
   function buildScratch() {
     if (!settings) return;
     const wrap = $('scratchWrap');
@@ -1594,12 +1608,14 @@
       card.onclick = () => {
         requireAuth(() => {
           if (card.classList.contains('opened')) return;
-          card.classList.add('opened');
-          addCoins(reward, `Scratch card win`);
-          updateDoc(doc(db, 'users', currentUser.uid), {
-            scratchUsedToday: (userData?.scratchUsedToday || 0) + 1
-          });
-          if (Math.random() > 0.5) confetti();
+          showAdThenExecute((rewardAmount) => {
+            card.classList.add('opened');
+            giveReward(rewardAmount, "Scratch Card");
+            updateDoc(doc(db, 'users', currentUser.uid), {
+              scratchUsedToday: (userData?.scratchUsedToday || 0) + 1
+            });
+            if (Math.random() > 0.5) showConfetti();
+          }, reward, "Scratch Card");
         });
       };
       wrap.appendChild(card);
@@ -1628,7 +1644,6 @@
     });
   }
   
-  // Copy Referral Link
   function copyRef() {
     const link = $('refLink')?.textContent;
     if (link && navigator.clipboard) {
@@ -1637,7 +1652,6 @@
     }
   }
   
-  // Submit Withdraw
   function submitWithdraw() {
     requireAuth(async () => {
       if (!settings) return;
@@ -1692,13 +1706,12 @@
         <div class="big-ic" style="background:linear-gradient(135deg,var(--success),var(--secondary))">✅</div>
         <h3>Request Submitted!</h3>
         <p>You'll receive payment within 24 hours</p>
-        <button class="btn success" onclick="closeGeneralModal()">DONE</button>
+        <button class="btn" onclick="closeGeneralModal()">DONE</button>
       `);
-      confetti();
+      showConfetti();
     });
   }
   
-  // Load User Data
   async function loadUserData() {
     if (!currentUser) return;
     const userRef = doc(db, 'users', currentUser.uid);
@@ -1727,7 +1740,6 @@
     updateBalDisplay();
     updateProfileUI();
     
-    // Setup realtime listener
     onSnapshot(userRef, (doc) => {
       if (doc.exists()) {
         userData = doc.data();
@@ -1759,7 +1771,6 @@
     }
   }
   
-  // Load Settings
   async function loadSettings() {
     const settingsDoc = await getDoc(doc(db, 'settings', 'appSettings'));
     if (settingsDoc.exists()) {
@@ -1786,7 +1797,6 @@
     }
     updateUIWithSettings();
     
-    // Listen for settings changes
     onSnapshot(doc(db, 'settings', 'appSettings'), (doc) => {
       if (doc.exists()) {
         settings = doc.data();
@@ -1795,7 +1805,6 @@
     });
   }
   
-  // Load Wheel Segments
   async function loadWheelSegments() {
     const segmentsQuery = query(collection(db, 'wheelSegments'), orderBy('order', 'asc'));
     const snapshot = await getDocs(segmentsQuery);
@@ -1816,7 +1825,29 @@
     buildWheelLabels();
   }
   
-  // Load Tasks
+  function buildWheelLabels() {
+    if (!wheelSegments.length) return;
+    const w = $('wheelLabels');
+    if (!w) return;
+    w.innerHTML = '';
+    const angleStep = 360 / wheelSegments.length;
+    wheelSegments.forEach((segment, i) => {
+      const s = document.createElement('span');
+      s.textContent = segment.reward;
+      const ang = i * angleStep + angleStep / 2;
+      const radius = 110;
+      s.style.position = 'absolute';
+      s.style.top = '50%';
+      s.style.left = '50%';
+      s.style.transformOrigin = '0 0';
+      s.style.transform = `rotate(${ang}deg) translate(0, -${radius}px) rotate(-${ang}deg)`;
+      s.style.color = '#fff';
+      s.style.fontWeight = '800';
+      s.style.fontSize = '14px';
+      w.appendChild(s);
+    });
+  }
+  
   async function loadTasks() {
     const tasksQuery = query(collection(db, 'tasks'), where('active', '==', true));
     const snapshot = await getDocs(tasksQuery);
@@ -1864,7 +1895,6 @@
     });
   }
   
-  // Load Referral Stats
   async function loadReferralStats() {
     if (!currentUser) return;
     const referralsQuery = query(collection(db, 'referrals'), where('referrerId', '==', currentUser.uid));
@@ -1901,7 +1931,6 @@
     }
   }
   
-  // Event Listeners
   function initEventListeners() {
     $('watchAdBtn')?.addEventListener('click', watchAd);
     $('dailyBonusBtn')?.addEventListener('click', dailyBonus);
@@ -1915,6 +1944,7 @@
     $('scratchNavBtn')?.addEventListener('click', () => go('scratch'));
     $('withdrawBtn')?.addEventListener('click', () => go('withdraw'));
     $('inviteBtn')?.addEventListener('click', () => go('referral'));
+    $('luckyBoxBtn')?.addEventListener('click', luckyBox);
     
     document.querySelectorAll('.method').forEach(method => {
       method.addEventListener('click', () => {
@@ -1924,7 +1954,6 @@
     });
   }
   
-  // Auth State Listener
   onAuthStateChanged(auth, async (user) => {
     currentUser = user;
     if (user) {
@@ -1942,14 +1971,12 @@
     hideLoading();
   });
   
-  // Initialize App
   async function init() {
     await loadSettings();
     await loadWheelSegments();
     await loadTasks();
     initEventListeners();
     
-    // Check URL for referral
     const urlParams = new URLSearchParams(window.location.search);
     const refId = urlParams.get('ref');
     if (refId) {
@@ -1959,7 +1986,6 @@
   
   init();
   
-  // Expose functions to global scope
   window.go = go;
   window.closeGeneralModal = closeGeneralModal;
   window.completeTask = window.completeTask;
